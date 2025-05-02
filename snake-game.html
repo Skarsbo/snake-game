@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Edited by Anders -->
 <html lang="no">
 <head>
     <meta charset="UTF-8">
@@ -75,13 +76,13 @@
             const resetBtn = document.getElementById('resetBtn');
             const scoreElement = document.querySelector('.score');
             const highScoreElement = document.querySelector('.high-score');
-            
+
             // Spillinstillinger
             const boxSize = 20;
             const canvasSize = 400;
             const gridSize = canvasSize / boxSize;
             let speed = 150; // millisekunder mellom hvert trekk
-            
+
             // Spillvariabler
             let snake = [];
             let direction = 'right';
@@ -91,10 +92,10 @@
             let highScore = 0; // Lagrer høyeste poengsum i denne økt
             let gameRunning = false;
             let gameLoop;
-            
+
             // Vis høyeste poengsum
             highScoreElement.textContent = `Rekord: ${highScore}`;
-            
+
             // Initialiser spill
             function initGame() {
                 // Sett opp slangen
@@ -103,19 +104,19 @@
                     {x: 4, y: 10},
                     {x: 3, y: 10}
                 ];
-                
+
                 direction = 'right';
                 nextDirection = 'right';
                 score = 0;
                 scoreElement.textContent = `Poeng: ${score}`;
-                
+
                 // Plasser mat
                 placeFood();
-                
+
                 // Tegn
                 drawGame();
             }
-            
+
             // Start spillet
             function startGame() {
                 if (!gameRunning) {
@@ -128,14 +129,14 @@
                     startBtn.textContent = 'Fortsett';
                 }
             }
-            
+
             // Plasser mat på tilfeldig sted
             function placeFood() {
                 food = {
                     x: Math.floor(Math.random() * gridSize),
                     y: Math.floor(Math.random() * gridSize)
                 };
-                
+
                 // Sjekk om maten ble plassert på slangen
                 for (let i = 0; i < snake.length; i++) {
                     if (food.x === snake[i].x && food.y === snake[i].y) {
@@ -144,14 +145,14 @@
                     }
                 }
             }
-            
+
             // Oppdater spilltilstand
             function updateGame() {
                 direction = nextDirection;
-                
+
                 // Beregn ny hodeposisjon
                 const head = {x: snake[0].x, y: snake[0].y};
-                
+
                 switch(direction) {
                     case 'right':
                         head.x++;
@@ -166,13 +167,13 @@
                         head.y++;
                         break;
                 }
-                
+
                 // Sjekk kollisjon med vegger
                 if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize) {
                     gameOver();
                     return;
                 }
-                
+
                 // Sjekk kollisjon med seg selv
                 for (let i = 0; i < snake.length; i++) {
                     if (head.x === snake[i].x && head.y === snake[i].y) {
@@ -180,56 +181,56 @@
                         return;
                     }
                 }
-                
+
                 // Sjekk om slangen spiser mat
                 if (head.x === food.x && head.y === food.y) {
                     // Øk score
                     score++;
                     scoreElement.textContent = `Poeng: ${score}`;
-                    
+
                     // Oppdater høyeste poengsum
                     if (score > highScore) {
                         highScore = score;
                         highScoreElement.textContent = `Rekord: ${highScore}`;
                     }
-                    
+
                     // Plasser ny mat
                     placeFood();
-                    
+
                     // Ikke fjern halespissen (slangen vokser)
                 } else {
                     // Fjern halespissen
                     snake.pop();
                 }
-                
+
                 // Legg til nytt hode
                 snake.unshift(head);
-                
+
                 // Tegn spillflaten
                 drawGame();
             }
-            
+
             // Tegn spillet
             function drawGame() {
                 // Tøm canvas
                 ctx.fillStyle = '#111';
                 ctx.fillRect(0, 0, canvasSize, canvasSize);
-                
+
                 // Tegn slangen
                 for (let i = 0; i < snake.length; i++) {
                     ctx.fillStyle = i === 0 ? '#4CAF50' : '#2E7D32'; // Lysere grønn for hodet
                     ctx.fillRect(snake[i].x * boxSize, snake[i].y * boxSize, boxSize, boxSize);
-                    
+
                     // Tegn en kant rundt hver del
                     ctx.strokeStyle = '#111';
                     ctx.strokeRect(snake[i].x * boxSize, snake[i].y * boxSize, boxSize, boxSize);
                 }
-                
+
                 // Tegn mat
                 ctx.fillStyle = '#FF5722';
                 ctx.fillRect(food.x * boxSize, food.y * boxSize, boxSize, boxSize);
             }
-            
+
             // Håndter tastetrykk
             document.addEventListener('keydown', function(event) {
                 switch(event.key) {
@@ -255,27 +256,27 @@
                         break;
                 }
             });
-            
+
             // Game over
             function gameOver() {
                 clearInterval(gameLoop);
                 gameRunning = false;
                 startBtn.textContent = 'Start Spill';
-                
+
                 // Vis game over melding
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
                 ctx.fillRect(0, 0, canvasSize, canvasSize);
-                
+
                 ctx.font = '30px Arial';
                 ctx.fillStyle = 'white';
                 ctx.textAlign = 'center';
                 ctx.fillText('Game Over', canvasSize / 2, canvasSize / 2 - 15);
-                
+
                 ctx.font = '20px Arial';
                 ctx.fillText(`Poengsum: ${score}`, canvasSize / 2, canvasSize / 2 + 20);
                 ctx.fillText('Trykk "Start Spill" for å spille igjen', canvasSize / 2, canvasSize / 2 + 50);
             }
-            
+
             // Knapp-hendelser
             startBtn.addEventListener('click', startGame);
             resetBtn.addEventListener('click', function() {
@@ -284,7 +285,7 @@
                 startBtn.textContent = 'Start Spill';
                 initGame();
             });
-            
+
             // Initialiser spillet
             initGame();
         });
