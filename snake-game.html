@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- Edited by Anders -->
-<!-- Edited by Hans -->
+<!-- Edited by hans on Anders branch -->
 <html lang="no">
 <head>
     <meta charset="UTF-8">
@@ -18,7 +18,7 @@
             background-color: #f5f5f5;
         }
         h1 {
-            color: #333;
+            color: #330;
             margin-bottom: 20px;
         }
         canvas {
@@ -219,7 +219,7 @@
 
                 // Tegn slangen
                 for (let i = 0; i < snake.length; i++) {
-                    ctx.fillStyle = i === 0 ? '#4CAF50' : '#2E7D32'; // Lysere grønn for hodet
+                    ctx.fillStyle = i === 0 ? '#d1954b' : '#a64c35'; // Rød for kroppen, oransje for hodet
                     ctx.fillRect(snake[i].x * boxSize, snake[i].y * boxSize, boxSize, boxSize);
 
                     // Tegn en kant rundt hver del
