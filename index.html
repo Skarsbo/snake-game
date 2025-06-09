@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<!-- Edited by Anders -->
-<!-- Edited by hans on Anders branch -->
 <html lang="no">
 <head>
     <meta charset="UTF-8">
@@ -87,7 +85,7 @@
             // Spillvariabler
             let snake = [];
             let direction = 'right';
-            let nextDirection = 'right';
+            let direction_queue = [];
             let food = {};
             let score = 0;
             let highScore = 0; // Lagrer høyeste poengsum i denne økt
@@ -107,7 +105,6 @@
                 ];
 
                 direction = 'right';
-                nextDirection = 'right';
                 score = 0;
                 scoreElement.textContent = `Poeng: ${score}`;
 
@@ -149,7 +146,10 @@
 
             // Oppdater spilltilstand
             function updateGame() {
-                direction = nextDirection;
+                if (direction_queue.length > 0) {
+                    // Hent neste retning fra køen
+                    direction = direction_queue.shift();
+                }
 
                 // Beregn ny hodeposisjon
                 const head = {x: snake[0].x, y: snake[0].y};
@@ -228,34 +228,33 @@
                 }
 
                 // Tegn mat
-                ctx.fillStyle = '#FF5722';
-                ctx.fillRect(food.x * boxSize, food.y * boxSize, boxSize, boxSize);
+                ctx.fillStyle = '#FFDD22';
+                let food_size = boxSize * 0.6; // Størrelse på maten
+                let difference = (boxSize - food_size) / 2; // Forskjell for å sentrere maten
+                ctx.fillRect(food.x * boxSize + difference, food.y * boxSize + difference, food_size, food_size);
             }
 
             // Håndter tastetrykk
             document.addEventListener('keydown', function(event) {
-                switch(event.key) {
-                    case 'ArrowUp':
-                        if (direction !== 'down') {
-                            nextDirection = 'up';
-                        }
-                        break;
-                    case 'ArrowDown':
-                        if (direction !== 'up') {
-                            nextDirection = 'down';
-                        }
-                        break;
-                    case 'ArrowLeft':
-                        if (direction !== 'right') {
-                            nextDirection = 'left';
-                        }
-                        break;
-                    case 'ArrowRight':
-                        if (direction !== 'left') {
-                            nextDirection = 'right';
-                        }
-                        break;
-                }
+                const key_map = {
+                    'ArrowUp': 'up',
+                    'ArrowDown': 'down',
+                    'ArrowLeft': 'left',
+                    'ArrowRight': 'right'
+                };
+
+                const new_dir = key_map[event.key];
+                if (!new_dir) return;
+                
+                // Unngå motsatt retning
+                const last_dir = direction_queue.length > 0 ? direction_queue[direction_queue.length - 1] : direction;
+                if (new_dir === 'up' && last_dir === 'down') return;
+                if (new_dir === 'down' && last_dir === 'up') return;
+                if (new_dir === 'left' && last_dir === 'right') return;
+                if (new_dir === 'right' && last_dir === 'left') return;
+
+                // Legg til ny retning i køen
+                direction_queue.push(new_dir);
             });
 
             // Game over
